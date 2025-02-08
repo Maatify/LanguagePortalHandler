@@ -1,0 +1,67 @@
+{
+  "name": "maatify/language-portal-handler",
+  "description": "maatify.com",
+  "version": "1.0.0001",
+  "type": "library",
+  "keywords": [
+    "PHP",
+    "DatabseLanguagePortalHandler",
+    "Databse",
+    "Language",
+    "Handler",
+    "maatify"
+  ],
+  "homepage": "https://github.com/Maatify/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mohamed Abdulalim",
+      "email": "mohamed@maatify.dev",
+      "homepage": "https://www.maatify.com/",
+      "role": "Backend Developer"
+    },
+    {
+      "name": "Ahmed Fawzy",
+      "email": "a.fawzy@maatify.dev",
+      "homepage": "https://www.maatify.com/",
+      "role": "Frontend Developer"
+    },
+    {
+      "name": "Mohaned Saeed Sami",
+      "email": "mohaned.saeed@maatify.dev",
+      "homepage": "https://www.maatify.com/",
+      "role": "Frontend Developer"
+    },
+    {
+      "name": "Ahmed Abdullah",
+      "email": "a.abdullah@maatify.dev",
+      "homepage": "https://www.maatify.com/",
+      "role": "Android Developer"
+    },
+    {
+      "name": "Elmokhtar Ahmed",
+      "email": "mokhtar@maatify.dev",
+      "homepage": "https://www.maatify.com/",
+      "role": "IOS Developer"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "maatify/uploader": "^1.3",
+    "maatify/post-validator-v2": "^1.3",
+    "maatify/db-model-v3": "^1.3"
+  },
+  "config": {
+    "platform": {
+      "php": "8.2.0"
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Maatify\\LanguagePortalHandler\\": "crs/",
+      "Maatify\\LanguagePortalHandler\\DBHandler\\": "crs/dbHandler/",
+      "Maatify\\LanguagePortalHandler\\Language\\": "crs/language/",
+      "Maatify\\LanguagePortalHandler\\Tables\\": "crs/tables/"
+    }
+  }
+}
