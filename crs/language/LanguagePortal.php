@@ -14,6 +14,7 @@
 namespace Maatify\LanguagePortalHandler\Language;
 
 use App\Assist\AppFunctions;
+use JetBrains\PhpStorm\NoReturn;
 use Maatify\Json\Json;
 use Maatify\LanguagePortalHandler\DBHandler\UploaderWebPPortalHandler;
 
@@ -75,7 +76,7 @@ class LanguagePortal extends DbLanguage
         );
     }
 
-    public function Update(): void
+    #[NoReturn] public function Update(): void
     {
         $this->PostedLanguageId();
         $this->row_id = $this->language_id;
@@ -96,7 +97,7 @@ class LanguagePortal extends DbLanguage
             } else {
                 $edits['name'] = $name;
                 $log['name'] = ['from' => $current['name'], 'to' => $name];
-                $changes[] = ['name', $current['name'], $name];
+                $changes['name'] = ['from' => $current['name'], 'to' => $name];
             }
         }
         if (isset($_POST['short_name']) && $short_name != $current['short_name']) {
@@ -104,7 +105,7 @@ class LanguagePortal extends DbLanguage
                 Json::Exist('short_name', 'Short Name ' . $short_name . ' Already Exist', $this->class_name . __LINE__);
             } else {
                 $edits['short_name'] = $short_name;
-                $changes[] = ['short_name', $current['short_name'], $short_name];
+                $changes['short_name'] = ['from' => $current['short_name'], 'to' => $short_name];
                 $log['short_name'] = ['from' => $current['short_name'], 'to' => $short_name];
             }
         }
@@ -113,7 +114,7 @@ class LanguagePortal extends DbLanguage
                 Json::Exist('code', 'Code ' . $code . ' Already Exist', $this->class_name . __LINE__);
             } else {
                 $edits['code'] = $code;
-                $changes[] = ['code', $current['code'], $code];
+                $changes['code'] = ['from' => $current['code'], 'to' => $code];
                 $log['code'] = ['from' => $current['code'], 'to' => $code];
             }
         }
@@ -122,25 +123,25 @@ class LanguagePortal extends DbLanguage
                 Json::Exist('locale', 'locale ' . $locale . ' Already Exist', $this->class_name . __LINE__);
             } else {
                 $edits['locale'] = $locale;
-                $changes[] = ['locale', $current['locale'], $locale];
+                $changes['locale'] = ['from' => $current['locale'], 'to' => $locale];
                 $log['locale'] = ['from' => $current['locale'], 'to' => $locale];
             }
         }
         if (isset($_POST['directory']) && $directory != $current['directory']) {
             $edits['directory'] = $directory;
-            $changes[] = ['directory', $current['directory'], $directory];
+            $changes['directory'] = ['from' => $current['directory'], 'to' => $directory];
             $log['directory'] = ['from' => $current['directory'], 'to' => $directory];
         }
         if (isset($_POST['sort']) && $sort != $current['sort']) {
             $edits['sort'] = $sort;
-            $changes[] = ['sort', $current['sort'], $sort];
+            $changes['sort'] = ['from' => $current['sort'], 'to' => $sort];
             $log['sort'] = ['from' => $current['sort'], 'to' => $sort];
         }
         if (empty($edits)) {
             Json::ErrorNoUpdate($this->class_name . __LINE__);
         } else {
             $this->Edit($edits, '`language_id` = ?', [$this->language_id]);
-            $this->Logger($log, $changes, 'Update');
+            $this->Logger(logger_description: $log, changes: $changes, action: 'Update');
         }
         Json::Success(line: $this->class_name . __LINE__);
     }
@@ -154,15 +155,10 @@ class LanguagePortal extends DbLanguage
             $old_file = ! empty($file['deleted']) ? AppFunctions::SiteImageURL() . $file['deleted'] : '';
             $new_file = AppFunctions::SiteImageURL() . $this->image_folder . '/' . $file['file'];
             $log['image'] = ['from' => $old_file, 'to' => $new_file];
-            $changes[] = [
-                'image',
-                $old_file,
-                $new_file,
-            ];
+            $changes['image'] = ['from' => $old_file, 'to' => $new_file];
             $this->Edit([
                 'image' => /*$this->image_folder . '/' .*/ $file['file'],
             ], '`language_id` = ? ', [$this->row_id]);
-//            Logger::RecordLog($changes);
             $this->Logger($log, $changes, 'UploadImage');
             Json::Success(line: $this->class_name . __LINE__);
         }
