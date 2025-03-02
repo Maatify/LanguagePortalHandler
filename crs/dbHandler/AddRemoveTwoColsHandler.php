@@ -65,9 +65,10 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
 
     protected function ValidateOptionalPostedSource(): int
     {
-        if(isset($_POST[$this->col_source_name])){
+        if (isset($_POST[$this->col_source_name])) {
             $this->ValidatePostedSource();
         }
+
         return 0;
     }
 
@@ -93,9 +94,10 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
 
     protected function ValidateOptionalPostedDestination(): int
     {
-        if(isset($_POST[$this->col_destination_name])){
+        if (isset($_POST[$this->col_destination_name])) {
             $this->ValidatePostedDestination();
         }
+
         return 0;
     }
 
@@ -176,14 +178,14 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
                 $this->col_destination_name => $this->col_destination_val,
             ];
 
-            if(!empty($this->cols_to_add)) {
+            if (! empty($this->cols_to_add)) {
                 foreach ($this->cols_to_add as $col) {
-                    if(str_contains($col[0], 'image')){
+                    if (str_contains($col[0], 'image')) {
                         $array_to_add[$col[0]] = 'image-not-found.png';
-                    }elseif ($col[0] == 'icon'){
+                    } elseif ($col[0] == 'icon') {
                         $array_to_add[$col[0]] = 'icon-image-not-found.png';
-                    }else{
-                        if($col[0] != $this->col_source_name && $col[0] != $this->col_destination_name  ) {
+                    } else {
+                        if ($col[0] != $this->col_source_name && $col[0] != $this->col_destination_name) {
                             $array_to_add[$col[0]] = $col[2];
                         }
                     }
@@ -191,43 +193,16 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             }
 
             $this->Add($array_to_add);
-            $changes = [
-                [
-                    'assign',
-                    '',
-                    'Assign',
-                ],
-                [
-                    $this->col_source_name,
-                    '',
-                    $this->col_source_val,
-
-                ],
-                [
-                    $this->col_destination_name,
-                    '',
-                    $this->col_destination_val,
-                ],
+            $changes['Assign'] = [
+                $this->col_source_name      => $this->col_source_val,
+                $this->col_destination_name => $this->col_destination_val,
             ];
         } else {
             $action = 'UnAssign';
             $this->Delete("`$this->col_source_name` = ? AND `$this->col_destination_name` = ? ", [$this->col_source_val, $this->col_destination_val]);
-            $changes = [
-                [
-                    'assign',
-                    '',
-                    'UnAssign',
-                ],
-                [
-                    $this->col_source_name,
-                    $this->col_source_val,
-                    '',
-                ],
-                [
-                    $this->col_destination_name,
-                    $this->col_destination_val,
-                    '',
-                ],
+            $changes['UnAssign'] = [
+                $this->col_source_name      => $this->col_source_val,
+                $this->col_destination_name => $this->col_destination_val,
             ];
         }
         $this->Logger($logger, $changes, $action);
@@ -255,7 +230,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $logger[$this->col_source_name] = $this->col_source_val;
             $logger[$this->col_destination_name] = $this->col_destination_val;
             $changes['Assign'][] = [
-                $this->col_source_name => $this->col_source_val,
+                $this->col_source_name      => $this->col_source_val,
                 $this->col_destination_name => $this->col_destination_val,
             ];
             $this->Logger($logger, $changes, 'Assign');
@@ -281,7 +256,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $logger[$this->col_source_name] = $this->col_source_val;
             $logger[$this->col_destination_name] = $this->col_destination_val;
             $changes['UnAssign'][] = [
-                $this->col_source_name => $this->col_source_val,
+                $this->col_source_name      => $this->col_source_val,
                 $this->col_destination_name => $this->col_destination_val,
             ];
             $this->Logger($logger, $changes, 'UnAssign');
@@ -309,7 +284,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
     private function AssignedListByHandler($otherTable, $other_col_name, $this_col_name, $this_col_val, array $current, string $order_by = ''): void
     {
         $otherTableName = $otherTable::TABLE_NAME;
-        if(empty($order_by)){
+        if (empty($order_by)) {
             $order_by = "`$otherTableName`.`$other_col_name` ASC";
         }
 
@@ -360,7 +335,6 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             [0]);
 
 
-
         $this->JsonHandlerWithOther(
             AppFunctions::MapArrayImages($result),
             AppFunctions::MapRowImages($current)
@@ -371,7 +345,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
     {
         $this->row_id = $this->ValidatePostedSource();
         $for_id = $this->ValidatePostedSourceOtherPostedName('for_id');
-        if($this->row_id == $for_id){
+        if ($this->row_id == $for_id) {
             Json::NotAllowedToUse('for_id', 'Cannot use Same Values', $this->class_name . __LINE__);
         }
         if ($list = array_column($this->RowsThisTable("`$this->col_destination_name`", "`$this->col_source_name` = ? ", [$this->row_id]), $this->col_destination_name)) {
@@ -381,20 +355,20 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $log = array();
 
             foreach ($list as $item) {
-                if(!$this->RowIsExistThisTable("`$this->col_source_name` = ? AND `$this->col_destination_name` = ? ", [$for_id, $item])) {
+                if (! $this->RowIsExistThisTable("`$this->col_source_name` = ? AND `$this->col_destination_name` = ? ", [$for_id, $item])) {
                     $this->Add([
                         $this->col_source_name      => $for_id,
                         $this->col_destination_name => $item,
                     ]);
-//                    $changes[] = [$this->col_destination_name, 'cloned from ' . $this->col_source_name . ': '.$this->row_id, $item];
-                    $log[]['clone'] = [$this->col_source_name =>$item, 'from'=>$this->row_id, 'to'=>$for_id];
+                    //                    $changes[] = [$this->col_destination_name, 'cloned from ' . $this->col_source_name . ': '.$this->row_id, $item];
+                    $log[]['clone'] = [$this->col_source_name => $item, 'from' => $this->row_id, 'to' => $for_id];
 
                     $changes['clones'][] = [
                         $this->col_destination_name => $item,
                     ];
                 }
             }
-            if(!empty($changes)){
+            if (! empty($changes)) {
                 $changes['clone_from'] = [$this->col_source_name => $this->row_id];
                 $this->row_id = $for_id;
                 $this->Logger($log, $changes, 'Clone');
@@ -402,7 +376,6 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
         }
         Json::Success(line: $this->class_name . __LINE__);
     }
-
 
 
     public function UpdateBySourceAndDestination(): void
@@ -416,29 +389,30 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
     }
 
 
-
     public function UpdateBySourceAndDestinationSilent(): bool
     {
         $this->ValidateEditBySourceAndDestination();
         [$edits, $log_keys, $changes] = $this->AddEditValues($this->current_row);
 
-        foreach ([$this->col_destination_name, $this->col_source_name] as $item){
-            if(isset($edits[$item])){
+        foreach ([$this->col_destination_name, $this->col_source_name] as $item) {
+            if (isset($edits[$item])) {
                 unset($edits[$item]);
             }
-            if(isset($changes[$item])){
+            if (isset($changes[$item])) {
                 unset($changes[$item]);
             }
-            if(isset($log_keys[$item])){
+            if (isset($log_keys[$item])) {
                 unset($log_keys[$item]);
             }
         }
         $log_keys = array_merge($this->logger_keys, $log_keys);
-        if (!empty($edits)) {
+        if (! empty($edits)) {
             $this->edit($edits, "`$this->col_source_name` = ? AND `$this->col_destination_name` = ? ", [$this->col_source_val, $this->col_destination_val]);
             $this->Logger($log_keys, $changes, 'Update');
+
             return true;
         }
+
         return false;
     }
 
@@ -456,7 +430,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $from = GeneralFunctions::Bool2String($this->current_row[$key]);
             $to = GeneralFunctions::Bool2String($edits[$key]);
             $logger[$key] = ['from' => $from, 'to' => $to];
-            $changes[] = [$key, $from, $to];
+            $changes[$key] = ['from' => $from, 'to' => $to];
             $log_keys = array_merge($this->logger_keys, $logger);
             $this->Edit($edits, "`$this->col_source_name` = ? AND `$this->col_destination_name` = ? ", [$this->col_source_val, $this->col_destination_val]);
             $this->Logger($log_keys, $changes, $_GET['action'] ?? 'Switch ' . $key);
@@ -472,10 +446,11 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
         $this->ValidateCurrentSourceAndDestination();
         $this->row_id = $this->col_source_val;
         if (empty($this->current_row)) {
-            Json::Invalid($this->col_source_name,  " $this->col_source_name & $this->col_destination_name Not Found in records", $this->class_name . __LINE__);
+            Json::Invalid($this->col_source_name, " $this->col_source_name & $this->col_destination_name Not Found in records", $this->class_name . __LINE__);
         }
         $this->logger_keys = [
-            $this->col_source_name => $this->col_source_val, $this->col_destination_name => $this->col_destination_val,
+            $this->col_source_name      => $this->col_source_val,
+            $this->col_destination_name => $this->col_destination_val,
         ];
     }
 
