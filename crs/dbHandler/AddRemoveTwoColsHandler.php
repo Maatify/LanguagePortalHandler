@@ -254,7 +254,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $logger = $this->logger_keys = [$this->col_source_name => $this->col_source_val, $this->col_destination_name => $this->col_destination_val];
             $logger[$this->col_source_name] = $this->col_source_val;
             $logger[$this->col_destination_name] = $this->col_destination_val;
-            $changes['Assign'] = [
+            $changes['Assign'][] = [
                 $this->col_source_name => $this->col_source_val,
                 $this->col_destination_name => $this->col_destination_val,
             ];
@@ -280,7 +280,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $logger = $this->logger_keys = [$this->col_source_name => $this->col_source_val, $this->col_destination_name => $this->col_destination_val];
             $logger[$this->col_source_name] = $this->col_source_val;
             $logger[$this->col_destination_name] = $this->col_destination_val;
-            $changes['UnAssign'] = [
+            $changes['UnAssign'][] = [
                 $this->col_source_name => $this->col_source_val,
                 $this->col_destination_name => $this->col_destination_val,
             ];
@@ -379,6 +379,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $this->logger_keys[$this->col_source_name] = $this->row_id;
             $changes = array();
             $log = array();
+
             foreach ($list as $item) {
                 if(!$this->RowIsExistThisTable("`$this->col_source_name` = ? AND `$this->col_destination_name` = ? ", [$for_id, $item])) {
                     $this->Add([
@@ -387,13 +388,14 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
                     ]);
 //                    $changes[] = [$this->col_destination_name, 'cloned from ' . $this->col_source_name . ': '.$this->row_id, $item];
                     $log[]['clone'] = [$this->col_source_name =>$item, 'from'=>$this->row_id, 'to'=>$for_id];
-                    $changes['clone'] = [
-                        $this->col_source_name => $this->row_id,
+
+                    $changes['clones'][] = [
                         $this->col_destination_name => $item,
                     ];
                 }
             }
             if(!empty($changes)){
+                $changes['clone_from'] = [$this->col_source_name => $this->row_id];
                 $this->row_id = $for_id;
                 $this->Logger($log, $changes, 'Clone');
             }
