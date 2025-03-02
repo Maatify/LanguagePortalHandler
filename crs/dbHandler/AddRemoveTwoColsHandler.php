@@ -16,6 +16,7 @@ namespace Maatify\LanguagePortalHandler\DBHandler;
 // Relation between Two table in this Table
 use App\Assist\AppFunctions;
 use App\DB\DBS\DbPortalHandler;
+use JetBrains\PhpStorm\NoReturn;
 use Maatify\Functions\GeneralFunctions;
 use Maatify\Json\Json;
 
@@ -232,7 +233,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
         $this->Logger($logger, $changes, $action);
     }
 
-    public function SwitchAssign(): void
+    #[NoReturn] public function SwitchAssign(): void
     {
         $this->SwitchAssignSilent();
         Json::Success(line: $this->class_name . __LINE__);
@@ -253,29 +254,15 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $logger = $this->logger_keys = [$this->col_source_name => $this->col_source_val, $this->col_destination_name => $this->col_destination_val];
             $logger[$this->col_source_name] = $this->col_source_val;
             $logger[$this->col_destination_name] = $this->col_destination_val;
-            $changes = [
-                [
-                    'assign',
-                    '',
-                    'Assign',
-                ],
-                [
-                    $this->col_source_name,
-                    '',
-                    $this->col_source_val,
-
-                ],
-                [
-                    $this->col_destination_name,
-                    '',
-                    $this->col_destination_val,
-                ],
+            $changes['Assign'] = [
+                $this->col_source_name => $this->col_source_val,
+                $this->col_destination_name => $this->col_destination_val,
             ];
             $this->Logger($logger, $changes, 'Assign');
         }
     }
 
-    public function Assign(): void
+    #[NoReturn] public function Assign(): void
     {
         $this->AssignSilent();
         Json::Success(line: $this->class_name . __LINE__);
@@ -293,28 +280,15 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
             $logger = $this->logger_keys = [$this->col_source_name => $this->col_source_val, $this->col_destination_name => $this->col_destination_val];
             $logger[$this->col_source_name] = $this->col_source_val;
             $logger[$this->col_destination_name] = $this->col_destination_val;
-            $changes = [
-                [
-                    'assign',
-                    '',
-                    'UnAssign',
-                ],
-                [
-                    $this->col_source_name,
-                    $this->col_source_val,
-                    '',
-                ],
-                [
-                    $this->col_destination_name,
-                    $this->col_destination_val,
-                    '',
-                ],
+            $changes['UnAssign'] = [
+                $this->col_source_name => $this->col_source_val,
+                $this->col_destination_name => $this->col_destination_val,
             ];
             $this->Logger($logger, $changes, 'UnAssign');
         }
     }
 
-    public function UnAssign(): void
+    #[NoReturn] public function UnAssign(): void
     {
         $this->UnAssignSilent();
         Json::Success(line: $this->class_name . __LINE__);
@@ -393,7 +367,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
         );
     }
 
-    public function AssignSourceFromOtherSourceId(): void
+    #[NoReturn] public function AssignSourceFromOtherSourceId(): void
     {
         $this->row_id = $this->ValidatePostedSource();
         $for_id = $this->ValidatePostedSourceOtherPostedName('for_id');
@@ -411,8 +385,12 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
                         $this->col_source_name      => $for_id,
                         $this->col_destination_name => $item,
                     ]);
-                    $changes[] = [$this->col_destination_name, 'cloned from ' . $this->col_source_name . ': '.$this->row_id, $item];
+//                    $changes[] = [$this->col_destination_name, 'cloned from ' . $this->col_source_name . ': '.$this->row_id, $item];
                     $log[]['clone'] = [$this->col_source_name =>$item, 'from'=>$this->row_id, 'to'=>$for_id];
+                    $changes['clone'] = [
+                        $this->col_source_name => $this->row_id,
+                        $this->col_destination_name => $item,
+                    ];
                 }
             }
             if(!empty($changes)){
@@ -462,7 +440,7 @@ abstract class AddRemoveTwoColsHandler extends DbPortalHandler
         return false;
     }
 
-    public function SwitchKeyBySourceAndDestination(string $key = 'status'): void
+    #[NoReturn] public function SwitchKeyBySourceAndDestination(string $key = 'status'): void
     {
         $this->SwitchKeyBySourceAndDestinationSilent($key);
         Json::Success(line: $this->class_name . 'Switch::' . __LINE__);

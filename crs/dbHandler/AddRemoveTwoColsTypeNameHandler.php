@@ -14,6 +14,7 @@
 namespace Maatify\LanguagePortalHandler\DBHandler;
 
 use App\Assist\AppFunctions;
+use JetBrains\PhpStorm\NoReturn;
 use Maatify\Json\Json;
 
 abstract class AddRemoveTwoColsTypeNameHandler extends AddRemoveTwoColsHandler
@@ -48,13 +49,13 @@ abstract class AddRemoveTwoColsTypeNameHandler extends AddRemoveTwoColsHandler
         parent::InitializeAddsToSource();
     }
 
-    public function Assign(): void
+    #[NoReturn] public function Assign(): void
     {
         $this->ValidatePostedSourceTypeId();
         parent::Assign();
     }
 
-    public function UnAssign(): void
+    #[NoReturn] public function UnAssign(): void
     {
         $this->ValidatePostedSourceTypeId();
         parent::UnAssign();
@@ -72,7 +73,7 @@ abstract class AddRemoveTwoColsTypeNameHandler extends AddRemoveTwoColsHandler
         parent::ListBySource();
     }
 
-    public function SwitchAssign(): void
+    #[NoReturn] public function SwitchAssign(): void
     {
         $this->ValidatePostedSourceTypeId();
         parent::SwitchAssign();

@@ -13,6 +13,7 @@
 
 namespace Maatify\LanguagePortalHandler\DBHandler;
 use App\DB\DBS\DbPortalHandler;
+use JetBrains\PhpStorm\NoReturn;
 use Maatify\Json\Json;
 use Maatify\LanguagePortalHandler\Language\LanguagePortal;
 use Maatify\PostValidatorV2\ValidatorConstantsTypes;
@@ -90,7 +91,7 @@ abstract class SubClassLanguageHandler extends DbPortalHandler
         return $this->RetrieveRow($table, $columns, $whereCondition, [$this->language_id, $this->row_id]);
     }
 
-    public function LanguageRow(): void
+    #[NoReturn] public function LanguageRow(): void
     {
         Json::Success($this->ValidateTableRow(), line: $this->class_name . __LINE__);
     }
@@ -146,7 +147,7 @@ abstract class SubClassLanguageHandler extends DbPortalHandler
         }
     }
 
-    private function AllPagination(): void
+    #[NoReturn] private function AllPagination(): void
     {
         [$table, $columns] = $this->getTableAndColumnsWithShortLanguage();
         $result = $this->PaginationRows($table, $columns, "`$this->identify_table_id_col_name` > ? 
@@ -161,7 +162,7 @@ abstract class SubClassLanguageHandler extends DbPortalHandler
             line: $this->class_name . __LINE__);
     }
 
-    public function AllLanguagesPagination(): void
+    #[NoReturn] public function AllLanguagesPagination(): void
     {
         [$table, $columns] = $this->getTableAndColumnsWithShortLanguage();
         $parent_name = $this->parent_class::TABLE_NAME;

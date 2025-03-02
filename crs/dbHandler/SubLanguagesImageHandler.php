@@ -14,6 +14,7 @@
 namespace Maatify\LanguagePortalHandler\DBHandler;
 
 use App\Assist\AppFunctions;
+use JetBrains\PhpStorm\NoReturn;
 use Maatify\Json\Json;
 use Maatify\LanguagePortalHandler\Tables\LanguageTable;
 
@@ -34,7 +35,7 @@ abstract class SubLanguagesImageHandler extends SubClassLanguageHandler
         ]);
     }
 
-    public function UploadImageLanguage(): void
+    #[NoReturn] public function UploadImageLanguage(): void
     {
         $this->row_id = $this->parent_class::obj()->ValidatePostedTableId();
         $parent_row = $this->parent_class::obj()->current_row;
@@ -48,9 +49,9 @@ abstract class SubLanguagesImageHandler extends SubClassLanguageHandler
             $new_file = AppFunctions::SiteImageURL() . /*$this->image_folder . '/' . */$file['file'];
             $log = $this->logger_keys =
                 [
-                    'language'                             => $this->language_short_name,
-                    $this->identify_table_id_col_name      => $this->row_id,
-                    DbLanguage::IDENTIFY_TABLE_ID_COL_NAME => $this->language_id,
+                    'language'                                => $this->language_short_name,
+                    $this->identify_table_id_col_name         => $this->row_id,
+                    LanguageTable::IDENTIFY_TABLE_ID_COL_NAME => $this->language_id,
                 ];
             $log['image'] = ['from' => $old_file, 'to' => $new_file];
             $changes[] = [$log['image'], $old_file, $new_file];
@@ -59,7 +60,7 @@ abstract class SubLanguagesImageHandler extends SubClassLanguageHandler
                 [
                     'image' => /*$this->image_folder . '/' .*/ $file['file'],
                 ],
-                "`$this->identify_table_id_col_name` = ? AND `" . DbLanguage::IDENTIFY_TABLE_ID_COL_NAME . "` = ? ",
+                "`$this->identify_table_id_col_name` = ? AND `" . LanguageTable::IDENTIFY_TABLE_ID_COL_NAME . "` = ? ",
                 [$this->row_id, $this->language_id]
             );
             $this->Logger($log, $changes, 'UploadImage');
@@ -70,7 +71,7 @@ abstract class SubLanguagesImageHandler extends SubClassLanguageHandler
 
     }
 
-    public function UploadImageTypeLanguage(): void
+    #[NoReturn] public function UploadImageTypeLanguage(): void
     {
         $this->row_id = $this->parent_class::obj()->ValidatePostedTableId();
         $parent_row = $this->parent_class::obj()->current_row;
@@ -86,9 +87,9 @@ abstract class SubLanguagesImageHandler extends SubClassLanguageHandler
 
             $log = $this->logger_keys =
                 [
-                    'language'                             => $this->language_short_name,
-                    $this->identify_table_id_col_name      => $this->row_id,
-                    DbLanguage::IDENTIFY_TABLE_ID_COL_NAME => $this->language_id,
+                    'language'                                => $this->language_short_name,
+                    $this->identify_table_id_col_name         => $this->row_id,
+                    LanguageTable::IDENTIFY_TABLE_ID_COL_NAME => $this->language_id,
                 ];
             $log[$type] = ['from' => $old_file, 'to' => $new_file];
             $changes[] = [$type, $old_file, $new_file];
@@ -97,7 +98,7 @@ abstract class SubLanguagesImageHandler extends SubClassLanguageHandler
                 [
                     $type => /*$this->image_folder . '/' .*/ $file['file'],
                 ],
-                "`$this->identify_table_id_col_name` = ? AND `" . DbLanguage::IDENTIFY_TABLE_ID_COL_NAME . "` = ? ",
+                "`$this->identify_table_id_col_name` = ? AND `" . LanguageTable::IDENTIFY_TABLE_ID_COL_NAME . "` = ? ",
                 [$this->row_id, $this->language_id]
             );
             $type = ucwords($type, '_');
