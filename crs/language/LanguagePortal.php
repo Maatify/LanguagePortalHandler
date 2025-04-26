@@ -58,7 +58,7 @@ class LanguagePortal extends DbLanguage
         return $this->RowIsExistThisTable("`$col` = ? ", [$val]);
     }
 
-    public function List(): void
+    #[NoReturn] public function List(): void
     {
         $result = $this->RowsThisTable();
 
