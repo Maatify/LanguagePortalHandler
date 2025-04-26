@@ -14,6 +14,7 @@
 namespace Maatify\LanguagePortalHandler\DBHandler;
 
 use App\Assist\AppFunctions;
+use JetBrains\PhpStorm\NoReturn;
 use Maatify\Json\Json;
 use Maatify\LanguagePortalHandler\Tables\LanguageTable;
 use Maatify\PostValidatorV2\ValidatorConstantsTypes;
@@ -38,7 +39,7 @@ abstract class SubLanguageSliderHandler extends AddRemoveTwoColsHandler
             ['stop', ValidatorConstantsTypes::DateTime, ValidatorConstantsValidators::Optional],
             ['title', ValidatorConstantsTypes::Description, ValidatorConstantsValidators::Optional],
             ['sub_title', ValidatorConstantsTypes::Description, ValidatorConstantsValidators::Optional],
-            ['slug_url', 'slug_url', ValidatorConstantsValidators::Optional],
+            ['slug_url', ValidatorConstantsTypes::PathUrl, ValidatorConstantsValidators::Optional],
         ];
 
         $this->cols_to_edit = [
@@ -50,7 +51,7 @@ abstract class SubLanguageSliderHandler extends AddRemoveTwoColsHandler
             ['stop', ValidatorConstantsTypes::DateTime, ValidatorConstantsValidators::Optional],
             ['title', ValidatorConstantsTypes::Description, ValidatorConstantsValidators::Optional],
             ['sub_title', ValidatorConstantsTypes::Description, ValidatorConstantsValidators::Optional],
-            ['slug_url', 'slug_url', ValidatorConstantsValidators::Optional],
+            ['slug_url', ValidatorConstantsTypes::PathUrl, ValidatorConstantsValidators::Optional],
         ];
 
         $this->cols_to_filter = [
@@ -61,11 +62,11 @@ abstract class SubLanguageSliderHandler extends AddRemoveTwoColsHandler
             ['title', ValidatorConstantsTypes::Description, ValidatorConstantsValidators::Optional],
             ['status', ValidatorConstantsTypes::Status, ValidatorConstantsValidators::Optional],
             ['sub_title', ValidatorConstantsTypes::Description, ValidatorConstantsValidators::Optional],
-            ['slug_url', 'slug_url', ValidatorConstantsValidators::Optional],
+            ['slug_url', ValidatorConstantsTypes::PathUrl, ValidatorConstantsValidators::Optional],
         ];
     }
 
-    public function Record(): void
+    #[NoReturn] public function Record(): void
     {
         $type = UploaderWebPPortalHandler::obj($this->image_folder)->ValidatePostType();
         parent::Record();

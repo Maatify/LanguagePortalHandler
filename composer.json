@@ -1,7 +1,7 @@
 {
   "name": "maatify/language-portal-handler",
   "description": "maatify.com",
-  "version": "1.0.0005",
+  "version": "1.0.6",
   "type": "library",
   "keywords": [
     "PHP",

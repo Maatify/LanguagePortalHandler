@@ -15,6 +15,7 @@ namespace Maatify\LanguagePortalHandler\DBHandler;
 
 use App\Assist\AppFunctions;
 use App\DB\DBS\DbPortalHandler;
+use JetBrains\PhpStorm\NoReturn;
 use Maatify\Json\Json;
 use Maatify\LanguagePortalHandler\Tables\LanguageTable;
 
@@ -23,7 +24,7 @@ abstract class ParentLanguageSliderHandler extends DbPortalHandler
     protected string $logger_type = '';
     protected string $image_folder = 'category_slider';
 
-    public function Record(): void
+    #[NoReturn] public function Record(): void
     {
         $type = UploaderWebPPortalHandler::obj($this->image_folder)->ValidatePostType();
         parent::Record();
